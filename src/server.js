@@ -38,11 +38,15 @@ const uploads = require('./api/uploads');
 const StorageService = require('./services/S3/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
+// cache
+const CacheService = require('./services/redis/CacheService');
+
 const init = async () => {
+  const cacheService = new CacheService();
   const usersService = new UsersService();
-  const collaborationsService = new CollaborationsService();
+  const collaborationsService = new CollaborationsService(cacheService);
   // const notesService = new NotesService();
-  const notesService = new NotesService(collaborationsService);
+  const notesService = new NotesService(collaborationsService, cacheService);
   const authenticationsService = new AuthenticationsService();
   // nyimpen dilokal -> const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/images'));
   const storageService = new StorageService();
